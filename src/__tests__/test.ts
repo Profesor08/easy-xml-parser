@@ -1,4 +1,4 @@
-import { xmlToJson } from "../index";
+import { xmlToJson, jsonToXml } from "../index";
 
 test("Throw error on wrong XML", () => {
   expect(() => {
@@ -6,7 +6,7 @@ test("Throw error on wrong XML", () => {
   }).toThrow();
 });
 
-test("XML to JSON", () => {
+test("XML to JavaScript object", () => {
   expect(
     xmlToJson(`
   <EarringAttribute testAttribute="123" testAttribute2="sdfasdf">
@@ -117,15 +117,9 @@ test("XML to JSON", () => {
       testAttribute: "123",
       testAttribute2: "sdfasdf",
       TestText: [
-        {
-          text: "1g2f3dh34fgh123dh341f23gfh34d234",
-        },
-        {
-          text: "1g2f3dh34fgh123dh341f23gfh34d234",
-        },
-        {
-          text: "1g2f3dh34fgh123dh341f23gfh34d234",
-        },
+        "1g2f3dh34fgh123dh341f23gfh34d234",
+        "1g2f3dh34fgh123dh341f23gfh34d234",
+        "1g2f3dh34fgh123dh341f23gfh34d234",
       ],
       EditionSettings: {
         Edition: [
@@ -517,4 +511,26 @@ test("XML to JSON", () => {
       },
     },
   });
+});
+
+test("Convert JavaScript object to XML string", () => {
+  expect(
+    jsonToXml({
+      root: {
+        a: 123123,
+        b: `1231'23`,
+        c: null,
+        d: undefined,
+        e: () => 123,
+        arr: [
+          {
+            a: 123,
+          },
+          {
+            a: 234,
+          },
+        ],
+      },
+    }),
+  ).toBe(`<root a="123123" b="1231&#039;23" c="null" d="undefined"><arr a="123" /><arr a="234" /></root>`);
 });
