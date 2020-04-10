@@ -118,11 +118,5 @@ export const jsonToXml = (obj: any): string => {
     }
   }
 
-  console.log(
-    JSON.stringify(obj, (key, val) => {
-      console.log(key, val);
-    }),
-  );
-
   return prepareEntries(obj).join("");
 };
