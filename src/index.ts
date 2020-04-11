@@ -7,6 +7,32 @@ interface IJsonObject {
 export const xmlToJson = (xmlString: string): any => {
   const document = new XmlDocument(xmlString);
 
+  const parseType = (value: string): string | number | boolean | null => {
+    const trimmedValue = value.trim().toLowerCase();
+
+    if (trimmedValue === "null") {
+      return null;
+    }
+
+    if (trimmedValue === "true") {
+      return true;
+    }
+
+    if (trimmedValue === "false") {
+      return false;
+    }
+
+    if (trimmedValue.match(/^\d+$/)) {
+      return parseInt(trimmedValue, 10);
+    }
+
+    if (trimmedValue.match(/^\d+\.\d+$/)) {
+      return parseFloat(trimmedValue);
+    }
+
+    return value;
+  };
+
   const parseNodeValue = (node: XmlNode) => {
     const nodeObj: IJsonObject = {};
 
@@ -21,7 +47,6 @@ export const xmlToJson = (xmlString: string): any => {
             if (Array.isArray(nodeObj[children.name]) === false) {
               nodeObj[children.name] = [nodeObj[children.name]];
             }
-
             nodeObj[children.name].push(parseNodeValue(children));
           } else {
             nodeObj[children.name] = parseNodeValue(children);
@@ -29,7 +54,15 @@ export const xmlToJson = (xmlString: string): any => {
         }
       });
 
-      return Object.assign({}, node.attr || {}, nodeObj);
+      const attr: IJsonObject = {};
+
+      if (node.attr) {
+        Object.entries(node.attr).forEach(([key, value]) => {
+          attr[key] = parseType(value);
+        });
+      }
+
+      return Object.assign({}, attr, nodeObj);
     }
 
     return {};
@@ -104,7 +137,8 @@ export const jsonToXml = (obj: any): string => {
         } else if (Array.isArray(val)) {
           val.forEach((v) => children.push(prepareEntry([key, v])));
         } else if (typeof val === "object") {
-          prepareEntries(val).forEach((str) => children.push(str));
+          // prepareEntries(val).forEach((str) => children.push(str));
+          children.push(prepareEntry([key, val]));
         }
       });
     }
@@ -114,7 +148,7 @@ export const jsonToXml = (obj: any): string => {
     if (children.length > 0) {
       return `<${[name, ...attributes].join(" ")}>${children.join("")}</${name}>`;
     } else {
-      return `<${[name, ...attributes].join(" ")} />`;
+      return `<${[name, ...attributes].join(" ")}/>`;
     }
   }
 
