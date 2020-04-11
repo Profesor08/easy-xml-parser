@@ -1,7 +1,7 @@
 {
   "name": "easy-xml-parser",
   "version": "1.0.3",
-  "description": "An ultimate tool to parse XMl int JSON format, with awesome result.",
+  "description": "An ultimate tool to parse XMl into JSON format, with awesome result.",
   "author": "Profesor08",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
