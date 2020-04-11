@@ -1,5 +1,8 @@
 # Easy XML Parser
 
+[![npm version](https://badge.fury.io/js/easy-xml-parser.svg)](https://badge.fury.io/js/easy-xml-parser)
+[![dependency status](https://david-dm.org/profesor08/easy-xml-parser.svg)](https://david-dm.org/profesor08/easy-xml-parser)
+
 XML <-> JSON parser, for easy convert data avoiding unnecesary properties.
 
 ## Examples
